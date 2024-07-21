@@ -7,6 +7,25 @@ import pandas as pd
 file_path = 'filtered_all_tcas.csv'
 data = pd.read_csv(file_path)
 
+data['fee_cleaned'] = data['fee'].str.extract('(\d+,\d+|\d+)').replace(',', '', regex=True).astype(float)
+data['1 Portfolio_cleaned'] = data['1 Portfolio'].str.extract('(\d+)').astype(float)
+data['2 Quota_cleaned'] = data['2 Quota'].str.extract('(\d+)').astype(float)
+data['3 admission_cleaned'] = data['3 admission'].str.extract('(\d+)').astype(float)
+data['4 direct_cleaned'] = data['4 direct'].str.extract('(\d+)').astype(float)
+
+# Find universities that accept the most students in each round
+max_portfolio_univ = data.groupby('university')['1 Portfolio_cleaned'].sum().idxmax()
+max_portfolio_value = data.groupby('university')['1 Portfolio_cleaned'].sum().max()
+
+max_quota_univ = data.groupby('university')['2 Quota_cleaned'].sum().idxmax()
+max_quota_value = data.groupby('university')['2 Quota_cleaned'].sum().max()
+
+max_admission_univ = data.groupby('university')['3 admission_cleaned'].sum().idxmax()
+max_admission_value = data.groupby('university')['3 admission_cleaned'].sum().max()
+
+max_direct_univ = data.groupby('university')['4 direct_cleaned'].sum().idxmax()
+max_direct_value = data.groupby('university')['4 direct_cleaned'].sum().max()
+
 # Initialize the Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 app.title = "TCAS Data Dashboard"
@@ -35,7 +54,7 @@ home_layout = html.Div([
             options=[{'label': univ, 'value': univ} for univ in data['university'].dropna().unique()],
             placeholder="Select a University"
         ),
-        html.Button('ค้นหา', id='university-search-button', n_clicks=0),
+        html.Button('ค้นหา', id='university-search-button', n_clicks=0, className='mt-2'),
     ], style={'width': '48%', 'display': 'inline-block'}),
     
     html.Div([
@@ -44,17 +63,19 @@ home_layout = html.Div([
             id='course-dropdown',
             placeholder="Select a Course"
         ),
-        html.Button('ค้นหา', id='course-search-button', n_clicks=0),
+        html.Button('ค้นหา', id='course-search-button', n_clicks=0, className='mt-2'),
     ], style={'width': '48%', 'display': 'inline-block'}),
     
     html.Hr(),
     
-    html.Div(id='course-details-output'),
+    html.Div(id='course-details-output', className='mt-3'),
 
     dash_table.DataTable(
         id='data-table',
         columns=[{"name": i, "id": i} for i in data.columns],
-        page_size=10
+        page_size=10,
+        style_table={'overflowX': 'auto'},
+        style_cell={'textAlign': 'left'}
     )
 ])
 
@@ -67,7 +88,65 @@ map_layout = html.Div([
 # Layout for Statistics page
 statistics_layout = html.Div([
     html.H1("Statistics", style={'textAlign': 'center'}),
-    # Add statistics-related content here
+    dbc.Row([
+        dbc.Col(dbc.Card(
+            dbc.CardBody([
+                html.H3("จำนวนมหาวิทยาลัยทั้งหมด", className="card-title"),
+                html.P(f"{data['university'].nunique()}", className="card-text"),
+            ]), color="primary", inverse=True
+        )),
+        dbc.Col(dbc.Card(
+            dbc.CardBody([
+                html.H3("จำนวนหลักสูตรทั้งหมด", className="card-title"),
+                html.P(f"{data['course'].nunique()}", className="card-text"),
+            ]), color="info", inverse=True
+        )),
+    ], className="mb-4"),
+    
+    dbc.Row([
+        dbc.Col(dbc.Card(
+            dbc.CardBody([
+                html.H3("ค่าธรรมเนียมการศึกษาเฉลี่ย", className="card-title"),
+                html.P(f"{data['fee_cleaned'].mean():,.2f} บาท", className="card-text"),
+            ]), color="success", inverse=True
+        )),
+        dbc.Col(dbc.Card(
+            dbc.CardBody([
+                html.H3("ค่าธรรมเนียมการศึกษาต่ำสุด", className="card-title"),
+                html.P(f"{data['fee_cleaned'].min():,.2f} บาท", className="card-text"),
+            ]), color="warning", inverse=True
+        )),
+        dbc.Col(dbc.Card(
+            dbc.CardBody([
+                html.H3("ค่าธรรมเนียมการศึกษาสูงสุด", className="card-title"),
+                html.P(f"{data['fee_cleaned'].max():,.2f} บาท", className="card-text"),
+            ]), color="danger", inverse=True
+        )),
+    ], className="mb-4"),
+    
+    dbc.Row([
+        dbc.Col(dbc.Card(
+            dbc.CardBody([
+                html.H3("จำนวนรับรวมในแต่ละรอบ", className="card-title"),
+                html.P(f"รอบ Portfolio: {data['1 Portfolio_cleaned'].sum()} คน", className="card-text"),
+                html.P(f"รอบ Quota: {data['2 Quota_cleaned'].sum()} คน", className="card-text"),
+                html.P(f"รอบ Admission: {data['3 admission_cleaned'].sum()} คน", className="card-text"),
+                html.P(f"รอบ Direct: {data['4 direct_cleaned'].sum()} คน", className="card-text"),
+            ]), color="secondary", inverse=True
+        )),
+    ], className="mb-4"),
+    
+    dbc.Row([
+        dbc.Col(dbc.Card(
+            dbc.CardBody([
+                html.H3("มหาวิทยาลัยที่รับคนเยอะสุดในแต่ละรอบ", className="card-title"),
+                html.P(f"รอบ Portfolio: {max_portfolio_univ} ({max_portfolio_value} คน)", className="card-text"),
+                html.P(f"รอบ Quota: {max_quota_univ} ({max_quota_value} คน)", className="card-text"),
+                html.P(f"รอบ Admission: {max_admission_univ} ({max_admission_value} คน)", className="card-text"),
+                html.P(f"รอบ Direct: {max_direct_univ} ({max_direct_value} คน)", className="card-text"),
+            ]), color="dark", inverse=True
+        )),
+    ], className="mb-4"),
 ])
 
 # Main layout with Navbar and page content
@@ -99,15 +178,20 @@ def update_table(n_clicks, university, course):
     if n_clicks > 0 and university and course:
         dff = data[(data['university'] == university) & (data['course'] == course)]
         
-        course_details = html.Div([
-            html.H4(f"รายละเอียดหลักสูตร: {course}"),
-            html.P(f"มหาวิทยาลัย: {university}"),
-            html.P(f"ค่าธรรมเนียมการศึกษา: {dff['fee'].values[0]}"),
-            html.P(f"จำนวนรับรอบที่ 1: {dff['1 Portfolio'].values[0]}"),
-            html.P(f"จำนวนรับรอบที่ 2: {dff['2 Quota'].values[0]}"),
-            html.P(f"จำนวนรับรอบที่ 3: {dff['3 admission'].values[0]}"),
-            html.P(f"จำนวนรับรอบที่ 4: {dff['4 direct'].values[0]}")
-        ])
+        if dff.empty:
+            course_details = html.Div([
+                html.H4("No data available for the selected course."),
+            ])
+        else:
+            course_details = html.Div([
+                html.H4(f"รายละเอียดหลักสูตร: {course}"),
+                html.P(f"มหาวิทยาลัย: {university}"),
+                html.P(f"ค่าธรรมเนียมการศึกษา: {dff['fee'].values[0]}"),
+                html.P(f"จำนวนรับรอบที่ 1: {dff['1 Portfolio'].values[0]}"),
+                                html.P(f"จำนวนรับรอบที่ 2: {dff['2 Quota'].values[0]}"),
+                html.P(f"จำนวนรับรอบที่ 3: {dff['3 admission'].values[0]}"),
+                html.P(f"จำนวนรับรอบที่ 4: {dff['4 direct'].values[0]}")
+            ])
 
         return dff.to_dict('records'), course_details
 
@@ -127,3 +211,4 @@ def display_page(pathname):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
