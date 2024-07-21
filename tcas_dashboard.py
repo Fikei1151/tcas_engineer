@@ -15,16 +15,13 @@ data['4 direct_cleaned'] = data['4 direct'].str.extract('(\d+)').astype(float)
 
 # Find universities that accept the most students in each round
 max_portfolio_univ = data.groupby('university')['1 Portfolio_cleaned'].sum().idxmax()
-max_portfolio_value = data.groupby('university')['1 Portfolio_cleaned'].sum().max()
+
 
 max_quota_univ = data.groupby('university')['2 Quota_cleaned'].sum().idxmax()
-max_quota_value = data.groupby('university')['2 Quota_cleaned'].sum().max()
 
 max_admission_univ = data.groupby('university')['3 admission_cleaned'].sum().idxmax()
-max_admission_value = data.groupby('university')['3 admission_cleaned'].sum().max()
 
 max_direct_univ = data.groupby('university')['4 direct_cleaned'].sum().idxmax()
-max_direct_value = data.groupby('university')['4 direct_cleaned'].sum().max()
 
 # Initialize the Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
@@ -110,18 +107,7 @@ statistics_layout = html.Div([
                 html.P(f"{data['fee_cleaned'].mean():,.2f} บาท", className="card-text"),
             ]), color="success", inverse=True
         )),
-        dbc.Col(dbc.Card(
-            dbc.CardBody([
-                html.H3("ค่าธรรมเนียมการศึกษาต่ำสุด", className="card-title"),
-                html.P(f"{data['fee_cleaned'].min():,.2f} บาท", className="card-text"),
-            ]), color="warning", inverse=True
-        )),
-        dbc.Col(dbc.Card(
-            dbc.CardBody([
-                html.H3("ค่าธรรมเนียมการศึกษาสูงสุด", className="card-title"),
-                html.P(f"{data['fee_cleaned'].max():,.2f} บาท", className="card-text"),
-            ]), color="danger", inverse=True
-        )),
+     
     ], className="mb-4"),
     
     dbc.Row([
@@ -140,10 +126,10 @@ statistics_layout = html.Div([
         dbc.Col(dbc.Card(
             dbc.CardBody([
                 html.H3("มหาวิทยาลัยที่รับคนเยอะสุดในแต่ละรอบ", className="card-title"),
-                html.P(f"รอบ Portfolio: {max_portfolio_univ} ({max_portfolio_value} คน)", className="card-text"),
-                html.P(f"รอบ Quota: {max_quota_univ} ({max_quota_value} คน)", className="card-text"),
-                html.P(f"รอบ Admission: {max_admission_univ} ({max_admission_value} คน)", className="card-text"),
-                html.P(f"รอบ Direct: {max_direct_univ} ({max_direct_value} คน)", className="card-text"),
+                html.P(f"รอบ Portfolio: {max_portfolio_univ} ", className="card-text"),
+                html.P(f"รอบ Quota: {max_quota_univ} ", className="card-text"),
+                html.P(f"รอบ Admission: {max_admission_univ} ", className="card-text"),
+                html.P(f"รอบ Direct: {max_direct_univ} ", className="card-text"),
             ]), color="dark", inverse=True
         )),
     ], className="mb-4"),
