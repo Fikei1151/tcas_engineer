@@ -1,5 +1,6 @@
 import dash
-from dash import dcc, html, Input, Output, dash_table, State
+from dash import dcc, html, Input, Output, State, dash_table
+import dash_bootstrap_components as dbc
 import pandas as pd
 
 # Load the filtered CSV file
@@ -7,10 +8,24 @@ file_path = 'filtered_all_tcas.csv'
 data = pd.read_csv(file_path)
 
 # Initialize the Dash app
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 app.title = "TCAS Data Dashboard"
 
-app.layout = html.Div([
+# Navbar
+navbar = dbc.NavbarSimple(
+    brand="TCAS Data Dashboard",
+    brand_href="/",
+    color="primary",
+    dark=True,
+    children=[
+        dbc.NavItem(dbc.NavLink("Home", href="/")),
+        dbc.NavItem(dbc.NavLink("Map", href="/map")),
+        dbc.NavItem(dbc.NavLink("Statistics", href="/statistics"))
+    ]
+)
+
+# Layout for Home page
+home_layout = html.Div([
     html.H1("TCAS Data Dashboard", style={'textAlign': 'center'}),
     
     html.Div([
@@ -41,6 +56,25 @@ app.layout = html.Div([
         columns=[{"name": i, "id": i} for i in data.columns],
         page_size=10
     )
+])
+
+# Layout for Map page
+map_layout = html.Div([
+    html.H1("University Map", style={'textAlign': 'center'}),
+    # Add map-related content here
+])
+
+# Layout for Statistics page
+statistics_layout = html.Div([
+    html.H1("Statistics", style={'textAlign': 'center'}),
+    # Add statistics-related content here
+])
+
+# Main layout with Navbar and page content
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    navbar,
+    html.Div(id='page-content')
 ])
 
 @app.callback(
@@ -78,6 +112,18 @@ def update_table(n_clicks, university, course):
         return dff.to_dict('records'), course_details
 
     return [], html.Div()
+
+@app.callback(
+    Output('page-content', 'children'),
+    Input('url', 'pathname')
+)
+def display_page(pathname):
+    if pathname == '/map':
+        return map_layout
+    elif pathname == '/statistics':
+        return statistics_layout
+    else:
+        return home_layout
 
 if __name__ == '__main__':
     app.run_server(debug=True)
