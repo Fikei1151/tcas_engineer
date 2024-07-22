@@ -2,13 +2,15 @@ import dash
 from dash import dcc, html, Input, Output, State, dash_table
 import dash_bootstrap_components as dbc
 import pandas as pd
-import dash_ag_grid as dag
+import dash_leaflet as dl
+import dash_leaflet.express as dlx
 import re
 
 # Load the filtered CSV file
 file_path = 'filtered_all_tcas.csv'
 data = pd.read_csv(file_path)
 
+# Clean and prepare data
 data['fee_cleaned'] = data['fee'].str.extract('(\d+,\d+|\d+)').replace(',', '', regex=True).astype(float)
 data['1 Portfolio_cleaned'] = data['1 Portfolio'].str.extract('(\d+)').astype(float)
 data['2 Quota_cleaned'] = data['2 Quota'].str.extract('(\d+)').astype(float)
@@ -17,12 +19,8 @@ data['4 direct_cleaned'] = data['4 direct'].str.extract('(\d+)').astype(float)
 
 # Find universities that accept the most students in each round
 max_portfolio_univ = data.groupby('university')['1 Portfolio_cleaned'].sum().idxmax()
-
-
 max_quota_univ = data.groupby('university')['2 Quota_cleaned'].sum().idxmax()
-
 max_admission_univ = data.groupby('university')['3 admission_cleaned'].sum().idxmax()
-
 max_direct_univ = data.groupby('university')['4 direct_cleaned'].sum().idxmax()
 
 data['courses'] = data['course'].str.replace(r'^\d+\.\s*', '', regex=True)
@@ -30,6 +28,12 @@ courses = data['courses'].drop_duplicates()
 courses_df = pd.DataFrame(courses, columns=['courses'])
 courses_df['details'] = 'แสดงรายละเอียด'
 
+# Load the CSV file with university locations
+location_file_path = 'university_location_with_lat_lon_updated.csv'
+location_data = pd.read_csv(location_file_path)
+
+# Filter data for locations that have latitude and longitude
+location_data = location_data.dropna(subset=['latitude', 'longitude'])
 
 # Initialize the Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
@@ -52,19 +56,7 @@ navbar = dbc.NavbarSimple(
 home_layout = html.Div([
     html.Div([
         html.H1("Engineering courses", style={'textAlign': 'center'}),
-
-    ], style={'paddingTop': '40px'}
-    ),
-    
-    # html.Div([
-    #     html.Label("ค้นหามหาวิทยาลัย"),
-    #     dcc.Dropdown(
-    #         id='university-dropdown',
-    #         options=[{'label': univ, 'value': univ} for univ in data['university'].dropna().unique()],
-    #         placeholder="Select a University"
-    #     ),
-    #     html.Button('ค้นหา', id='university-search-button', n_clicks=0, className='mt-2'),
-    # ], style={'width': '48%', 'display': 'inline-block'}),
+    ], style={'paddingTop': '40px'}),
     
     html.Div([
         html.Label("ค้นหาหลักสูตร"),
@@ -79,8 +71,7 @@ home_layout = html.Div([
     
     html.Hr(),
     
-    # html.Div(id='course-details-output', className='mt-3'),
-     html.Div([
+    html.Div([
         dash_table.DataTable(
             id='courses-table',
             columns=[
@@ -101,13 +92,15 @@ home_layout = html.Div([
         )
     ], style={'width': '50%', 'display': 'inline-block', 'justifyContent': 'center'}),
     html.Div(id='course-details-output', style={'marginTop': '20px'})
-    # html.Ul([html.Li(sub_course) for sub_course in sub_courses])
 ], style={'width': '100%', 'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'center', 'alignItems': 'center'})
 
 # Layout for Map page
 map_layout = html.Div([
-    html.H1("University Map", style={'textAlign': 'center'}),
-    # Add map-related content here
+    html.H1("engineering University Map", style={'textAlign': 'center'}),
+    dl.Map(style={'width': '100%', 'height': '80vh'}, center=[13.736717, 100.523186], zoom=6, children=[
+        dl.TileLayer(),
+        dl.LayerGroup(id="layer")
+    ])
 ])
 
 # Layout for Statistics page
@@ -135,7 +128,6 @@ statistics_layout = html.Div([
                 html.P(f"{data['fee_cleaned'].mean():,.2f} บาท", className="card-text"),
             ]), color="success", inverse=True
         )),
-     
     ], className="mb-4"),
     
     dbc.Row([
@@ -171,14 +163,22 @@ app.layout = html.Div([
 ])
 
 @app.callback(
-    Output('course-dropdown', 'options'),
-    Input('university-search-button', 'n_clicks'),
-    State('university-dropdown', 'value')
+    Output('layer', 'children'),
+    [Input('url', 'pathname')]
 )
-def update_course_dropdown(n_clicks, university):
-    if n_clicks > 0 and university:
-        filtered_courses = data[data['university'] == university]['course'].dropna().unique()
-        return [{'label': course, 'value': course} for course in filtered_courses]
+def update_map(pathname):
+    if pathname == '/map':
+        markers = [
+            dl.Marker(position=[row['latitude'], row['longitude']], children=[
+                dl.Tooltip(row['university']),
+                dl.Popup([
+                    html.H4(row['university']),
+                    html.P(f"Latitude: {row['latitude']}"),
+                    html.P(f"Longitude: {row['longitude']}")
+                ])
+            ]) for index, row in location_data.iterrows()
+        ]
+        return markers
     return []
 
 # Callback สำหรับการอัพเดทตารางตามการค้นหา
@@ -211,32 +211,6 @@ def display_course_details(active_cell, data):
         return f"รายละเอียดของหลักสูตร: {course}"
     return "เลือกหลักสูตรเพื่อแสดงรายละเอียด"
 
-
-
-# def update_table(n_clicks, university, course):
-    
-#     if n_clicks > 0 and university and course:
-#         dff = data[(data['university'] == university) & (data['course'] == course)]
-        
-#         if dff.empty:
-#             course_details = html.Div([
-#                 html.H4("No data available for the selected course."),
-#             ])
-#         else:
-#             course_details = html.Div([
-#                 html.H4(f"รายละเอียดหลักสูตร: {course}"),
-#                 html.P(f"มหาวิทยาลัย: {university}"),
-#                 html.P(f"ค่าธรรมเนียมการศึกษา: {dff['fee'].values[0]}"),
-#                 html.P(f"จำนวนรับรอบที่ 1: {dff['1 Portfolio'].values[0]}"),
-#                                 html.P(f"จำนวนรับรอบที่ 2: {dff['2 Quota'].values[0]}"),
-#                 html.P(f"จำนวนรับรอบที่ 3: {dff['3 admission'].values[0]}"),
-#                 html.P(f"จำนวนรับรอบที่ 4: {dff['4 direct'].values[0]}")
-#             ])
-
-#         return dff.to_dict('records'), course_details
-
-#     return [], html.Div()
-
 @app.callback(
     Output('page-content', 'children'),
     Input('url', 'pathname')
@@ -251,4 +225,3 @@ def display_page(pathname):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
