@@ -7,7 +7,7 @@ import dash_leaflet.express as dlx
 import re
 
 # Load the filtered CSV file
-file_path = 'filtered_all_tcas.csv'
+file_path = 'data/tcas.csv'
 data = pd.read_csv(file_path)
 
 # Clean and prepare data
@@ -29,7 +29,7 @@ courses_df = pd.DataFrame(courses, columns=['courses'])
 courses_df['details'] = 'แสดงรายละเอียด'
 
 # Load the CSV file with university locations
-location_file_path = 'university_location_with_lat_lon_updated.csv'
+location_file_path = 'data/data.csv'
 location_data = pd.read_csv(location_file_path)
 
 # Filter data for locations that have latitude and longitude
