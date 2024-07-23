@@ -4,7 +4,8 @@ from geopy.geocoders import Nominatim
 from time import sleep
 
 # Load the data
-university_location = pd.read_csv('filtered_all_tcas.csv')
+university_location = pd.read_csv('data/tcas.csv')
+university_location['course'] = university_location['course'].str.replace(r'^\d+\.\s*', '', regex=True)
 
 # Initialize geolocator
 geolocator = Nominatim(user_agent="university_locator")
@@ -36,7 +37,7 @@ for i, row in missing_lat_lon.iterrows():
     sleep(1)
 
 # Save the updated DataFrame
-university_location.to_csv('university_location_with_lat_lon_updated.csv', index=False)
+university_location.to_csv('data/data.csv', index=False)
 
 # Display the updated DataFrame
 university_location.head()
