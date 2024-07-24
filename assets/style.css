@@ -1,6 +1,6 @@
 body {
-    background-color: #FFFF;
-    color: #FFFF;
+    background-color: #F8EDED;
+    color: #000000;
 }
 
 /* Style for each button in the sub-course list */
@@ -10,7 +10,7 @@ body {
     padding: 10px;
     cursor: pointer;
     font-size: 18px;
-    color: white;
+    color: black;
     display: block;
     width: 100%;
 }
