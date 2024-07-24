@@ -55,9 +55,10 @@ navbar = dbc.NavbarSimple(
     color="dark",
     dark=True,
     children=[
-        dbc.NavItem(dbc.NavLink("Home", href="/")),
+        dbc.NavItem(dbc.NavLink("Course", href="/")),
+        dbc.NavItem(dbc.NavLink("University", href="/university")),
+        dbc.NavItem(dbc.NavLink("Statistics", href="/statistics")),
         dbc.NavItem(dbc.NavLink("Map", href="/map")),
-        dbc.NavItem(dbc.NavLink("Statistics", href="/statistics"))
     ]
 )
 
@@ -85,11 +86,11 @@ home_layout = html.Div([
         ]),
         html.Div([
             html.Div([
-                html.Div([html.H3("มหาวิทยาลัย", className="card-title")], style={'fontSize': '25px', 'color': text_color, 'paddingBottom': '20px'}),
+                html.Div([html.H3("มหาวิทยาลัย", className="card-title")], style={'fontSize': '25px', 'color': text_color, 'paddingBottom': '20px', 'paddingTop': '20px'}),
                 html.Div([html.Div(id='university-output')], style={'fontSize': '25px'})
-            ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': '#93B1A6', 'width': '500px', 'height': '250px', 'paddingBottom': '30px', 'borderRadius': '25px', 'marginLeft': '20px', 'marginBottom': '20px', 'alignItems': 'center', 'justifyContent': 'center'}),
+            ], style={ 'backgroundColor': '#93B1A6', 'width': '500px', 'height': '250px', 'padding': '20px', 'paddingBottom': '30px', 'borderRadius': '25px', 'marginLeft': '20px', 'marginBottom': '20px', 'alignItems': 'center', 'justifyContent': 'center', 'textAlign': 'center'}),
             html.Div([
-                html.Div([html.H3("ค่าธรรมเนียม", className="card-title")], style={'fontSize': '25px', 'paddingBottom': '20px'}),
+                html.Div([html.H3("ค่าธรรมเนียม", className="card-title")], style={'fontSize': '25px', 'paddingBottom': '20px', 'paddingTop': '20px'}),
                 html.Div([html.Div(id='fee-info')], style={'fontSize': '25px'})
             ], style={'backgroundColor': '#5C8374', 'width': '500px', 'height': '250px', 'padding': '20px', 'paddingBottom': '40px', 'borderRadius': '25px', 'alignItems': 'center', 'marginLeft': '20px', 'color': text_color, 'textAlign': 'center'}),
         ])
@@ -107,11 +108,15 @@ home_layout = html.Div([
 
 # Layout for Map page
 map_layout = html.Div([
-    html.H1("engineering University Map", style={'textAlign': 'center'}),
+    html.H1("แผนที่แสดงมหาวิทยาลัย", style={'textAlign': 'center', 'paddingTop': '60px', 'paddingBottom': '20px'}),
     dl.Map(style={'width': '100%', 'height': '80vh'}, center=[13.736717, 100.523186], zoom=6, children=[
         dl.TileLayer(),
         dl.LayerGroup(id="layer")
     ])
+])
+
+university_layout = html.Div([
+    
 ])
 
 # Layout for Statistics page
@@ -283,7 +288,7 @@ def update_university_output_and_bar_graph(n_clicks, course_value):
         fig = px.bar(
             x=bar_data.index,
             y=bar_data.values,
-            labels={'x': 'Admission Type', 'y': 'Count'},
+            labels={'x': 'TCAS TYPE (รอบ)', 'y': 'Count (คน)'},
             title=f'{first_university}'
         )
 
@@ -359,6 +364,8 @@ def display_course_details(active_cell, data):
 def display_page(pathname):
     if pathname == '/map':
         return map_layout
+    elif pathname == '/university':
+        return university_layout
     elif pathname == '/statistics':
         return statistics_layout
     else:
