@@ -25,11 +25,6 @@ max_quota_univ = data.groupby('university')['2 Quota_cleaned'].sum().idxmax()
 max_admission_univ = data.groupby('university')['3 admission_cleaned'].sum().idxmax()
 max_direct_univ = data.groupby('university')['4 direct_cleaned'].sum().idxmax()
 
-# data['courses'] = data['course'].str.replace(r'^\d+\.\s*', '', regex=True)
-# courses = data['courses'].drop_duplicates()
-# courses_df = pd.DataFrame(courses, columns=['courses'])
-# courses_df['details'] = 'แสดงรายละเอียด'
-
 data['course'] = data['course'].str.replace(r'^\d+\.\s*', '', regex=True)
 courses = data['course'].drop_duplicates()
 
@@ -45,6 +40,8 @@ location_data = pd.read_csv(location_file_path)
 
 # Filter data for locations that have latitude and longitude
 location_data = location_data.dropna(subset=['latitude', 'longitude'])
+
+text_color = 'black'
 
 # Initialize the Dash app
 
@@ -64,80 +61,49 @@ navbar = dbc.NavbarSimple(
     ]
 )
 
-# Layout for Home page
-# home_layout = html.Div([
-#     html.Div([
-#         html.H1("Engineering courses", style={'textAlign': 'center'}),
-#     ], style={'paddingTop': '40px'}),
-    
-#     html.Div([
-#         html.Label("ค้นหาหลักสูตร"),
-#         dcc.Input(
-#             id='course-input',
-#             placeholder="พิมพ์หลักสูตรที่ต้องการค้นหา",
-#             type='text',
-#             debounce=False,  # ทำให้การค้นหาเริ่มทำงานเมื่อพิมพ์เสร็จ
-#             style={'width': '100%'}
-#         ),
-#     ], style={'width': '70%', 'display': 'inline-block'}),
-    
-#     html.Hr(),
-    
-#     html.Div([
-#         dash_table.DataTable(
-#             id='courses-table',
-#             columns=[
-#                 {"name": "หลักสูตร", "id": "courses"},
-#                 {
-#                     "name": "รายละเอียด", 
-#                     "id": "details", 
-#                     "presentation": "markdown"
-#                 }
-#             ],
-#             data=courses_df.to_dict('records'),
-#             style_cell={'textAlign': 'left', 'border': 'none'},
-#             style_data={
-#                 'borderBottom': '1px solid black',
-#                 'paddingBottom': '20px',
-#                 'paddingTop': '20px'
-#             }
-#         )
-#     ], style={'width': '50%', 'display': 'inline-block', 'justifyContent': 'center'}),
-#     html.Div(id='course-details-output', style={'marginTop': '20px'})
-# ], style={'width': '100%', 'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'center', 'alignItems': 'center'})
-
-# Layout for Home page
+# Layout for course page
 home_layout = html.Div([
-    html.Div([      
-        html.Div([
-            html.Div([html.H3("สาขา", className="card-title")], style={'fontSize': '40px', 'color': 'black'}),
+    html.Div([
+            html.Div([html.H1("สาขา", className="card-title")], style={'fontSize': '50px', 'color': text_color, 'fontWeight': '900'}),
             dcc.Dropdown(courses, id='course-input', placeholder="กรุณาเลือกสาขา", style={'width': '300px', 'color': 'black'}, value='วิศวกรรมปัญญาประดิษฐ์'),
-        ], style={'display': 'flex', 'flexDirection': 'row', 'gap': '20px', 'alignItems': 'center', 'margin': '20px', 'marginBottom': '5px', 'marginTop': '50px'}),
-        
-        html.Div([
-            html.Div([html.H3("หลักสูตร", className="card-title")], style={'alignItems': 'center', 'justifyContent': 'center', 'fontSize': '25px'}),
-            html.Div(id='sub-course-list')
-        ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': '#FF8225', 'width': '500px', 'height': '480px', 'overflowY': 'scroll', 'padding': '20px', 'paddingBottom': '40px', 'borderRadius': '25px', 'margin': '20px', 'alignItems': 'center', 'marginTop': '40px', 'color': 'white'}),
-        
-        html.Div([
-            html.Div([html.H3("มหาวิทยาลัย", className="card-title")], style={'fontSize': '25px', 'color': 'white'}),
-            html.Div([html.Div(id='university-output')], style={'fontSize': '25px'})
-        ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': '#B43F3F', 'width': '500px', 'height': '200px', 'padding': '20px', 'paddingBottom': '30px', 'borderRadius': '25px', 'marginBottom': '10px', 'marginTop': '60px', 'margin': '20px', 'alignItems': 'center', 'justifyContent': 'center'}),
-        ], style={'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'center', 'textAlign': 'center'}),
-        
+        ], style={'display': 'flex', 'flexDirection': 'row', 'gap': '20px', 'alignItems': 'center', 'marginTop': '60px'}),
+
+    html.Div([
+        html.Div([      
+            html.Div([
+                html.Div([html.H3("หลักสูตร", className="card-title")], style={'alignItems': 'center', 'justifyContent': 'center', 'fontSize': '25px', 'paddingTop': '20px', 'paddingBottom': '20px'}),
+                html.Div(id='sub-course-list')
+            ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': 'rgba(147, 177, 166, 0.8)', 'width': '500px', 'height': '520px', 'overflowY': 'scroll', 'padding': '20px', 'paddingBottom': '40px', 'borderRadius': '25px', 'marginRight': '20px', 'alignItems': 'center', 'color': text_color}),
+
+        ], style={'display': 'flex', 'flexDirection': 'column', 'textAlign': 'center'}),
         html.Div([
             html.Div([
-                html.Div([html.H3("ข้อมูลการรับสมัคร", className="card-title")], style={'justifyContent': 'center', 'textAlign': 'center', 'color': 'white'}),
+                html.Div([html.H3("ข้อมูลการรับสมัคร", className="card-title")], style={'justifyContent': 'center', 'textAlign': 'center', 'color': text_color, 'paddingTop': '40px'}),
                 dcc.Graph(id='bar-graph'),
-            ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': '#173B45', 'width': '500px', 'height': '550px', 'padding': '10px', 'paddingBottom': '20px', 'borderRadius': '25px', 'margin': '20px', 'fontSize': '25px'}),
+
+            ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': 'rgb(24, 61, 61, 0.6)', 'width': '500px', 'height': '520px', 'paddingBottom': '20px', 'borderRadius': '25px', 'marginRight': '20px', 'fontSize': '25px'}),
+        ]),
+        html.Div([
             html.Div([
-                html.Div([html.H3("ค่าธรรมเนียม", className="card-title")], style={'fontSize': '25px'}),
+                html.Div([html.H3("มหาวิทยาลัย", className="card-title")], style={'fontSize': '25px', 'color': text_color, 'paddingBottom': '20px'}),
+                html.Div([html.Div(id='university-output')], style={'fontSize': '25px'})
+            ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': '#93B1A6', 'width': '500px', 'height': '250px', 'paddingBottom': '30px', 'borderRadius': '25px', 'marginLeft': '20px', 'marginBottom': '20px', 'alignItems': 'center', 'justifyContent': 'center'}),
+            html.Div([
+                html.Div([html.H3("ค่าธรรมเนียม", className="card-title")], style={'fontSize': '25px', 'paddingBottom': '20px'}),
                 html.Div([html.Div(id='fee-info')], style={'fontSize': '25px'})
-            ], style={'backgroundColor': '#FF8225', 'width': '500px', 'height': '200px', 'padding': '20px', 'paddingBottom': '40px', 'borderRadius': '25px', 'alignItems': 'center', 'marginTop': '60px', 'marginBottom': '10px', 'marginLeft': '20px', 'color': 'white', 'textAlign': 'center', 'justifyContent': 'center'})
-        ], style={'marginTop': '20px'})
-    
-    
-], style={'display': 'flex', 'flexDirection': 'row'})
+            ], style={'backgroundColor': '#5C8374', 'width': '500px', 'height': '250px', 'padding': '20px', 'paddingBottom': '40px', 'borderRadius': '25px', 'alignItems': 'center', 'marginLeft': '20px', 'color': text_color, 'textAlign': 'center'}),
+        ])
+
+    ], style={'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'center', 'marginTop': '60px'}),
+    html.Div([
+        html.H1("ตำแหน่ง", style={'textAlign': 'center'}),
+        dl.Map(id='map', center=[13.736717, 100.523186], zoom=5, style={'height': '303px', 'width': '194vh'}, children=[
+        dl.TileLayer(),
+        dl.LayerGroup(id="markers")
+        ])    
+    ], style={'marginTop': '40px'})
+
+], style={'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'center', 'alignItems': 'center'})
 
 # Layout for Map page
 map_layout = html.Div([
@@ -205,8 +171,9 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     navbar,
     html.Div(id='page-content')
-])
+], style={'overflowX': 'hidden'})
 
+#callback map
 @app.callback(
     Output('layer', 'children'),
     [Input('url', 'pathname')]
@@ -243,7 +210,7 @@ def update_map(pathname):
 #             return [{'courses': 'ไม่พบหลักสูตร', 'details': ''}]
 #         return filtered_courses.to_dict('records')
 
-
+#callback course
 @app.callback(
     Output('sub-course-list', 'children'),
     Input('course-input', 'value')
@@ -269,7 +236,10 @@ def update_sub_course_list(value):
 @app.callback(
     [Output('university-output', 'children'),
      Output('bar-graph', 'figure'),
-     Output('fee-info', 'children')],
+     Output('fee-info', 'children'),
+     Output('map', 'center'),
+     Output('map', 'zoom'),
+     Output('markers', 'children')],
     [Input({'type': 'sub-course-button', 'index': ALL}, 'n_clicks'),
      Input('course-input', 'value')]
 )
@@ -280,9 +250,12 @@ def update_university_output_and_bar_graph(n_clicks, course_value):
     university_output = "กรุณาเลือกหลักสูตร"
     bar_figure = {}
     fee_info = []
+    markers = []
+    map_center = [13.736717, 100.523186]  # Default center coordinates
+    map_zoom = 5  # Default zoom level
 
     if not ctx.triggered:
-        return university_output, bar_figure, fee_info
+        return university_output, bar_figure, fee_info, map_center, map_zoom, markers
 
     triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
     if 'index' in triggered_id:
@@ -291,7 +264,7 @@ def update_university_output_and_bar_graph(n_clicks, course_value):
         university = data[data['sub_course'] == sub_course]['university']
 
         if university.empty:
-            return university_output, bar_figure, fee_info
+            return university_output, bar_figure, fee_info, map_center, map_zoom, markers
 
         first_university = university.iloc[0]
 
@@ -318,17 +291,17 @@ def update_university_output_and_bar_graph(n_clicks, course_value):
         fig.update_layout(
             plot_bgcolor='rgba(0,0,0,0)',  # Transparent plot background
             paper_bgcolor='rgba(0,0,0,0)',  # Transparent paper background
-            title_font=dict(size=18, color='white'),
-            xaxis_title_font=dict(size=14, color='white'),
-            yaxis_title_font=dict(size=14, color='white'),
-            xaxis=dict(color='white'),
-            yaxis=dict(color='white')
+            title_font=dict(size=18, color=text_color),
+            xaxis_title_font=dict(size=14, color=text_color),
+            yaxis_title_font=dict(size=14, color=text_color),
+            xaxis=dict(color=text_color),
+            yaxis=dict(color=text_color)
         )
 
         fig.update_traces(marker_color='#F8EDED')
         fig.update_xaxes(
             showline=True, 
-            linecolor='white',
+            linecolor=text_color,
             gridcolor='rgba(0,0,0,0)'  # Transparent grid lines
         )
         fig.update_yaxes(
@@ -341,10 +314,28 @@ def update_university_output_and_bar_graph(n_clicks, course_value):
         fee_info = [html.P(f'{amount}') for amount in fee_data]
 
         university_output = html.P(first_university)
+        
+        # Filter location data for the selected university
+        location_data_filtered = location_data[location_data['university'] == first_university]
+        if not location_data_filtered.empty:
+            first_location = location_data_filtered.iloc[0]
+            map_center = [first_location['latitude'], first_location['longitude']]
+            map_zoom = 12  # Zoom in closer to the university
 
-        return university_output, fig, fee_info
+            markers = [
+                dl.Marker(position=[row['latitude'], row['longitude']], children=[
+                    dl.Tooltip(row['university']),
+                    dl.Popup([
+                        html.H4(row['university']),
+                        html.P(f"Latitude: {row['latitude']}"),
+                        html.P(f"Longitude: {row['longitude']}")
+                    ])
+                    ]) for index, row in location_data_filtered.iterrows()
+                ]
 
-    return university_output, bar_figure, fee_info
+        return university_output, fig, fee_info, map_center, map_zoom, markers
+
+    return university_output, bar_figure, fee_info, map_center, map_zoom, markers
 
 
 # Callback สำหรับการแสดงรายละเอียดของหลักสูตร
@@ -360,6 +351,7 @@ def display_course_details(active_cell, data):
         return f"รายละเอียดของหลักสูตร: {course}"
     return "เลือกหลักสูตรเพื่อแสดงรายละเอียด"
 
+#callback page path 
 @app.callback(
     Output('page-content', 'children'),
     Input('url', 'pathname')
