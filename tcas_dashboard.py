@@ -120,52 +120,52 @@ university_layout = html.Div([
 
 # Layout for Statistics page
 statistics_layout = html.Div([
-    html.H1("Statistics", style={'textAlign': 'center'}),
+    html.H1("Statistics", style={'textAlign': 'center', 'marginBottom': '50px'}),
     dbc.Row([
         dbc.Col(dbc.Card(
             dbc.CardBody([
-                html.H3("จำนวนมหาวิทยาลัยทั้งหมด", className="card-title"),
+                html.H3("จำนวนมหาวิทยาลัยทั้งหมด", className="card-title", style={"color":"#ceb5a7"}),
                 html.P(f"{data['university'].nunique()}", className="card-text"),
-            ]), color="primary", inverse=True
+            ]), color="#92828d", inverse=True, style={'width': '500rm', 'height': '200rm','textAlign': 'center'}
         )),
         dbc.Col(dbc.Card(
             dbc.CardBody([
-                html.H3("จำนวนหลักสูตรทั้งหมด", className="card-title"),
+                html.H3("จำนวนหลักสูตรทั้งหมด", className="card-title", style={"color":"#ceb5a7"}),
                 html.P(f"{data['course'].nunique()}", className="card-text"),
-            ]), color="info", inverse=True
+            ]), color="#92828d", inverse=True, style={'width': '500rm', 'height': '200rm','textAlign': 'center'}
         )),
     ], className="mb-4"),
     
     dbc.Row([
         dbc.Col(dbc.Card(
             dbc.CardBody([
-                html.H3("ค่าธรรมเนียมการศึกษาเฉลี่ย", className="card-title"),
+                html.H3("ค่าธรรมเนียมการศึกษาเฉลี่ย", className="card-title", style={"color":"#5d2e46"}),
                 html.P(f"{data['fee_cleaned'].mean():,.2f} บาท", className="card-text"),
-            ]), color="success", inverse=True
+            ]), color="#adaabf", inverse=True, style={'width': '500rm', 'height': '200rm','textAlign': 'center'}
         )),
     ], className="mb-4"),
     
     dbc.Row([
         dbc.Col(dbc.Card(
             dbc.CardBody([
-                html.H3("จำนวนรับรวมในแต่ละรอบ", className="card-title"),
+                html.H3("จำนวนรับรวมในแต่ละรอบ", className="card-title", style={"color":"#ceb5a7"}),
                 html.P(f"รอบ Portfolio: {data['1 Portfolio_cleaned'].sum()} คน", className="card-text"),
                 html.P(f"รอบ Quota: {data['2 Quota_cleaned'].sum()} คน", className="card-text"),
                 html.P(f"รอบ Admission: {data['3 admission_cleaned'].sum()} คน", className="card-text"),
                 html.P(f"รอบ Direct: {data['4 direct_cleaned'].sum()} คน", className="card-text"),
-            ]), color="secondary", inverse=True
+            ]), color="#666a86", inverse=True, style={'width': '400rm', 'height': '200rm','textAlign': 'center'}
         )),
     ], className="mb-4"),
     
     dbc.Row([
         dbc.Col(dbc.Card(
             dbc.CardBody([
-                html.H3("มหาวิทยาลัยที่รับคนเยอะสุดในแต่ละรอบ", className="card-title"),
+                html.H3("มหาวิทยาลัยที่รับคนเยอะสุดในแต่ละรอบ", className="card-title", style={"color":"#ebefbf"}),
                 html.P(f"รอบ Portfolio: {max_portfolio_univ} ", className="card-text"),
                 html.P(f"รอบ Quota: {max_quota_univ} ", className="card-text"),
                 html.P(f"รอบ Admission: {max_admission_univ} ", className="card-text"),
                 html.P(f"รอบ Direct: {max_direct_univ} ", className="card-text"),
-            ]), color="dark", inverse=True
+            ]), color="#656565", inverse=True, style={'width': '400rm', 'height': '200rm','textAlign': 'center'}
         )),
     ], className="mb-4"),
 ])
