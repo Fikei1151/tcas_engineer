@@ -56,7 +56,6 @@ navbar = dbc.NavbarSimple(
     dark=True,
     children=[
         dbc.NavItem(dbc.NavLink("Course", href="/")),
-        dbc.NavItem(dbc.NavLink("University", href="/university")),
         dbc.NavItem(dbc.NavLink("Statistics", href="/statistics")),
         dbc.NavItem(dbc.NavLink("Map", href="/map")),
     ]
@@ -116,7 +115,7 @@ map_layout = html.Div([
 ])
 
 university_layout = html.Div([
-    
+
 ])
 
 # Layout for Statistics page
@@ -364,8 +363,6 @@ def display_course_details(active_cell, data):
 def display_page(pathname):
     if pathname == '/map':
         return map_layout
-    elif pathname == '/university':
-        return university_layout
     elif pathname == '/statistics':
         return statistics_layout
     else:
