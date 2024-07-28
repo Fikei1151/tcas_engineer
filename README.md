@@ -13,9 +13,9 @@ Celery: A distributed task queue used for managing long-running tasks in Dash ca
 
 ## Usage
 1. clone the repository
-  git clone https://github.com/Fikei1151/tcas_engineer.git
+```git clone https://github.com/Fikei1151/tcas_engineer.git```
 3. run the application
-  python tcas_dashboard.py
+```python tcas_dashboard.py```
 
 members
 1. Nicha   Vikromrotjananan  6410110175
