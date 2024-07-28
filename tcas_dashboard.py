@@ -64,45 +64,41 @@ navbar = dbc.NavbarSimple(
 # Layout for course page
 home_layout = html.Div([
     html.Div([
-            html.Div([html.H1("สาขา", className="card-title")], style={'fontSize': '50px', 'color': text_color, 'fontWeight': '900'}),
-            dcc.Dropdown(courses, id='course-input', placeholder="กรุณาเลือกสาขา", style={'width': '300px', 'color': 'black'}, value='วิศวกรรมปัญญาประดิษฐ์'),
-        ], style={'display': 'flex', 'flexDirection': 'row', 'gap': '20px', 'alignItems': 'center', 'marginTop': '60px'}),
+    html.Div([html.H1("สาขา", className="card-title")], style={'fontSize': '3.125rem', 'color': text_color, 'fontWeight': '900'}),
+    dcc.Dropdown(courses, id='course-input', placeholder="กรุณาเลือกสาขา", style={'width': '18.75rem', 'color': 'black'}, value='วิศวกรรมปัญญาประดิษฐ์'),
+], style={'display': 'flex', 'flexDirection': 'row', 'gap': '1.25rem', 'alignItems': 'center', 'marginTop': '3.75rem'}),
 
-    html.Div([
-        html.Div([      
-            html.Div([
-                html.Div([html.H3("หลักสูตร", className="card-title")], style={'alignItems': 'center', 'justifyContent': 'center', 'fontSize': '25px', 'paddingTop': '20px', 'paddingBottom': '20px'}),
-                html.Div(id='sub-course-list')
-            ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': 'rgba(147, 177, 166, 0.8)', 'width': '500px', 'height': '520px', 'overflowY': 'scroll', 'padding': '20px', 'paddingBottom': '40px', 'borderRadius': '25px', 'marginRight': '20px', 'alignItems': 'center', 'color': text_color}),
-
-        ], style={'display': 'flex', 'flexDirection': 'column', 'textAlign': 'center'}),
+html.Div([
+    html.Div([      
         html.Div([
-            html.Div([
-                html.Div([html.H3("ข้อมูลการรับสมัคร", className="card-title")], style={'justifyContent': 'center', 'textAlign': 'center', 'color': text_color, 'paddingTop': '40px'}),
-                dcc.Graph(id='bar-graph'),
-
-            ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': 'rgb(24, 61, 61, 0.6)', 'width': '500px', 'height': '520px', 'paddingBottom': '20px', 'borderRadius': '25px', 'marginRight': '20px', 'fontSize': '25px'}),
-        ]),
-        html.Div([
-            html.Div([
-                html.Div([html.H3("มหาวิทยาลัย", className="card-title")], style={'fontSize': '25px', 'color': text_color, 'paddingBottom': '20px', 'paddingTop': '20px'}),
-                html.Div([html.Div(id='university-output')], style={'fontSize': '25px'})
-            ], style={ 'backgroundColor': '#93B1A6', 'width': '500px', 'height': '250px', 'padding': '20px', 'paddingBottom': '30px', 'borderRadius': '25px', 'marginLeft': '20px', 'marginBottom': '20px', 'alignItems': 'center', 'justifyContent': 'center', 'textAlign': 'center'}),
-            html.Div([
-                html.Div([html.H3("ค่าธรรมเนียม", className="card-title")], style={'fontSize': '25px', 'paddingBottom': '20px', 'paddingTop': '20px'}),
-                html.Div([html.Div(id='fee-info')], style={'fontSize': '25px'})
-            ], style={'backgroundColor': '#5C8374', 'width': '500px', 'height': '250px', 'padding': '20px', 'paddingBottom': '40px', 'borderRadius': '25px', 'alignItems': 'center', 'marginLeft': '20px', 'color': text_color, 'textAlign': 'center'}),
-        ])
-
-    ], style={'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'center', 'marginTop': '60px'}),
+            html.Div([html.H3("หลักสูตร", className="card-title")], style={'alignItems': 'center', 'justifyContent': 'center', 'fontSize': '1.5625rem', 'paddingTop': '1.25rem', 'paddingBottom': '1.25rem'}),
+            html.Div(id='sub-course-list')
+        ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': 'rgba(147, 177, 166, 0.8)', 'width': '31.25rem', 'height': '32.5rem', 'overflowY': 'scroll', 'padding': '1.25rem', 'paddingBottom': '2.5rem', 'borderRadius': '1.5625rem', 'marginRight': '1.25rem', 'alignItems': 'center', 'color': text_color}),
+    ], style={'display': 'flex', 'flexDirection': 'column', 'textAlign': 'center'}),
     html.Div([
-        html.H1("ตำแหน่ง", style={'textAlign': 'center'}),
-        dl.Map(id='map', center=[13.736717, 100.523186], zoom=5, style={'height': '303px', 'width': '194vh'}, children=[
-        dl.TileLayer(),
-        dl.LayerGroup(id="markers")
-        ])    
-    ], style={'marginTop': '40px'})
-
+        html.Div([
+            html.Div([html.H3("ข้อมูลการรับสมัคร", className="card-title")], style={'justifyContent': 'center', 'textAlign': 'center', 'color': text_color, 'paddingTop': '2.5rem'}),
+            dcc.Graph(id='bar-graph'),
+        ], style={'display': 'flex', 'flexDirection': 'column', 'backgroundColor': 'rgb(24, 61, 61, 0.6)', 'width': '31.25rem', 'height': '32.5rem', 'paddingBottom': '1.25rem', 'borderRadius': '1.5625rem', 'marginRight': '1.25rem', 'fontSize': '1.5625rem'}),
+    ]),
+    html.Div([
+        html.Div([
+            html.Div([html.H3("มหาวิทยาลัย", className="card-title")], style={'fontSize': '1.5625rem', 'color': text_color, 'paddingBottom': '1.25rem', 'paddingTop': '1.25rem'}),
+            html.Div([html.Div(id='university-output')], style={'fontSize': '1.5625rem'})
+        ], style={'backgroundColor': '#93B1A6', 'width': '31.25rem', 'height': '15.625rem', 'padding': '1.25rem', 'paddingBottom': '1.875rem', 'borderRadius': '1.5625rem', 'marginLeft': '1.25rem', 'marginBottom': '1.25rem', 'alignItems': 'center', 'justifyContent': 'center', 'textAlign': 'center'}),
+        html.Div([
+            html.Div([html.H3("ค่าธรรมเนียม", className="card-title")], style={'fontSize': '1.5625rem', 'paddingBottom': '1.25rem', 'paddingTop': '1.25rem'}),
+            html.Div([html.Div(id='fee-info')], style={'fontSize': '1.5625rem'})
+        ], style={'backgroundColor': '#5C8374', 'width': '31.25rem', 'height': '15.625rem', 'padding': '1.25rem', 'paddingBottom': '2.5rem', 'borderRadius': '1.5625rem', 'alignItems': 'center', 'marginLeft': '1.25rem', 'color': text_color, 'textAlign': 'center'}),
+    ])
+], style={'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'center', 'marginTop': '3.75rem'}),
+html.Div([
+    html.H1("ตำแหน่ง", style={'textAlign': 'center'}),
+    dl.Map(id='map', center=[13.736717, 100.523186], zoom=5, style={'height': '18.9375rem', 'width': '121.25rem'}, children=[
+    dl.TileLayer(),
+    dl.LayerGroup(id="markers")
+    ])    
+], style={'marginTop': '2.5rem'})
 ], style={'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'center', 'alignItems': 'center'})
 
 # Layout for Map page
@@ -124,48 +120,57 @@ statistics_layout = html.Div([
     dbc.Row([
         dbc.Col(dbc.Card(
             dbc.CardBody([
-                html.H3("จำนวนมหาวิทยาลัยทั้งหมด", className="card-title", style={"color":"#ceb5a7"}),
-                html.P(f"{data['university'].nunique()}", className="card-text"),
-            ]), color="#92828d", inverse=True, style={'width': '500rm', 'height': '200rm','textAlign': 'center'}
+                html.H3("จำนวนมหาวิทยาลัยทั้งหมด", className="card-title", style={"color":"Black", 'fontSize': '1.8rem', 'marginBottom': '20px'}),
+                html.P(f"{data['university'].nunique()}", className="card-text", style={'fontSize': '1.2rem', 'color':'#32292f'}),
+            ]), color="#8DB19A", inverse=True, style={'width': '500rm', 'height': '200rm','textAlign': 'center'}
         )),
         dbc.Col(dbc.Card(
             dbc.CardBody([
-                html.H3("จำนวนหลักสูตรทั้งหมด", className="card-title", style={"color":"#ceb5a7"}),
-                html.P(f"{data['course'].nunique()}", className="card-text"),
-            ]), color="#92828d", inverse=True, style={'width': '500rm', 'height': '200rm','textAlign': 'center'}
-        )),
-    ], className="mb-4"),
-    
-    dbc.Row([
-        dbc.Col(dbc.Card(
-            dbc.CardBody([
-                html.H3("ค่าธรรมเนียมการศึกษาเฉลี่ย", className="card-title", style={"color":"#5d2e46"}),
-                html.P(f"{data['fee_cleaned'].mean():,.2f} บาท", className="card-text"),
-            ]), color="#adaabf", inverse=True, style={'width': '500rm', 'height': '200rm','textAlign': 'center'}
+                html.H3("จำนวนหลักสูตรทั้งหมด", className="card-title", style={"color":"Black", 'fontSize': '1.8rem', 'marginBottom': '20px'}),
+                html.P(f"{data['course'].nunique()}", className="card-text", style={'fontSize': '1.2rem', 'color':'#32292f'}),
+            ]), color="#8DB19A", inverse=True, style={'width': '500rm', 'height': '200rm','textAlign': 'center'}
         )),
     ], className="mb-4"),
     
     dbc.Row([
         dbc.Col(dbc.Card(
             dbc.CardBody([
-                html.H3("จำนวนรับรวมในแต่ละรอบ", className="card-title", style={"color":"#ceb5a7"}),
-                html.P(f"รอบ Portfolio: {data['1 Portfolio_cleaned'].sum()} คน", className="card-text"),
-                html.P(f"รอบ Quota: {data['2 Quota_cleaned'].sum()} คน", className="card-text"),
-                html.P(f"รอบ Admission: {data['3 admission_cleaned'].sum()} คน", className="card-text"),
-                html.P(f"รอบ Direct: {data['4 direct_cleaned'].sum()} คน", className="card-text"),
-            ]), color="#666a86", inverse=True, style={'width': '400rm', 'height': '200rm','textAlign': 'center'}
+                html.H3("ค่าธรรมเนียมการศึกษาเฉลี่ย", className="card-title", style={"color":"Black", 'fontSize': '1.8rem', 'marginBottom': '20px'}),
+                html.P(f"{data['fee_cleaned'].mean():,.2f} บาท", className="card-text", style={'fontSize': '1.2rem', 'color':'Black'}),
+            ]), color="rgba(147, 177, 166, 0.8)", inverse=True, style={'width': '500rm', 'height': '200rm','textAlign': 'center'}
         )),
     ], className="mb-4"),
     
     dbc.Row([
         dbc.Col(dbc.Card(
             dbc.CardBody([
-                html.H3("มหาวิทยาลัยที่รับคนเยอะสุดในแต่ละรอบ", className="card-title", style={"color":"#ebefbf"}),
-                html.P(f"รอบ Portfolio: {max_portfolio_univ} ", className="card-text"),
-                html.P(f"รอบ Quota: {max_quota_univ} ", className="card-text"),
-                html.P(f"รอบ Admission: {max_admission_univ} ", className="card-text"),
-                html.P(f"รอบ Direct: {max_direct_univ} ", className="card-text"),
-            ]), color="#656565", inverse=True, style={'width': '400rm', 'height': '200rm','textAlign': 'center'}
+                html.H3("จำนวนรับรวมในแต่ละรอบ", className="card-title", style={"color":"Black", 'textAlign':'center', 'fontSize': '1.8rem', 'marginBottom': '20px'}),
+                html.P(f"รอบ Portfolio: {data['1 Portfolio_cleaned'].sum()} คน", className="card-text", style={'fontSize': '1.2rem', 'color':'Black'}),
+                html.P(f"รอบ Quota: {data['2 Quota_cleaned'].sum()} คน", className="card-text", style={'fontSize': '1.2rem', 'color':'Black'}),
+                html.P(f"รอบ Admission: {data['3 admission_cleaned'].sum()} คน", className="card-text", style={'fontSize': '1.2rem', 'color':'Black'}),
+                html.P(f"รอบ Direct: {data['4 direct_cleaned'].sum()} คน", className="card-text", style={'fontSize': '1.2rem', 'color':'Black'}),
+            ]), color="#718B7A", inverse=True, style={'width': '400rm', 'height': '200rm', 'textAlign':'center'}
+        )),
+        dbc.Col(dbc.Card(
+            dbc.CardBody([
+                html.H3("จำนวนรับรวมในแต่ละรอบ", className="card-title", style={"color":"Black", 'textAlign':'center', 'fontSize': '1.8rem'}),
+                html.P(f"รอบ Portfolio: {data['1 Portfolio_cleaned'].sum()} คน", className="card-text", style={'fontSize': '1.2rem'}),
+                html.P(f"รอบ Quota: {data['2 Quota_cleaned'].sum()} คน", className="card-text", style={'fontSize': '1.2rem'}),
+                html.P(f"รอบ Admission: {data['3 admission_cleaned'].sum()} คน", className="card-text", style={'fontSize': '1.2rem'}),
+                html.P(f"รอบ Direct: {data['4 direct_cleaned'].sum()} คน", className="card-text", style={'fontSize': '1.2rem'}),
+            ]), color="#718B7A", inverse=True, style={'width': '400rm', 'height': '200rm'}
+        ))
+    ], className="mb-4"),
+    
+    dbc.Row([
+        dbc.Col(dbc.Card(
+            dbc.CardBody([
+                html.H3("มหาวิทยาลัยที่รับคนเยอะสุดในแต่ละรอบ", className="card-title", style={"color":"Black", 'fontSize': '1.8rem', 'marginBottom': '20px'}),
+                html.P(f"รอบ Portfolio: {max_portfolio_univ} ", className="card-text", style={'fontSize': '1.2rem', 'color':'Black'}),
+                html.P(f"รอบ Quota: {max_quota_univ} ", className="card-text", style={'fontSize': '1.2rem', 'color':'Black'}),
+                html.P(f"รอบ Admission: {max_admission_univ} ", className="card-text", style={'fontSize': '1.2rem', 'color':'Black'}),
+                html.P(f"รอบ Direct: {max_direct_univ} ", className="card-text", style={'fontSize': '1.2rem', 'color':'Black'}),
+            ]), color="rgb(24, 61, 61, 0.6)", inverse=True, style={'width': '400rm', 'height': '200rm','textAlign': 'center'}
         )),
     ], className="mb-4"),
 ])
